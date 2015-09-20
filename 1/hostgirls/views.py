@@ -7,7 +7,7 @@ from datetime import datetime
 from hostgirls import app
 from flask import Flask, g, request, abort, jsonify
 
-from .models import MeiZiModel
+from .models import *
 from .database import db
 from meiziSpider import MeiZiSpider
 
@@ -37,28 +37,231 @@ def removeSQL():
     return "success"
 
 '''
-    向数据库中添加一列妹子的信息
+FUCTION:    向数据库中添加200个妹子的信息
+NOTE:       初始化完成之后不需要在调用，内部接口
+    
 '''
-@app.route('/add/')
-def addOne():
-    meizis = MeiZiSpider().getMeiZiAtPage(2)
-    for meizi in meizis:
-        m = MeiZiModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
-        db.session.add(m)
-        db.session.commit()
+@app.route('/initData/')
+def addMeiZiByCid():
+    for i in range(1, 10)[::-1]:
+        meizis = MeiZiSpider().getMeiZiAtPage(i, 4)[::-1]
+        for meizi in meizis:
+            m = SmallFreshModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
+            db.session.add(m)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
 
     return "success"
 
 '''
-    获取妹子的信息
+    定时更新大胸妹
+'''
+@app.route('/updateBigChest/')
+def updateBigChestMeiZi():
+    bigChestMeiZi = MeiZiSpider().getMeiZiAtPage(1, 2)[::-1]
+    meiZiInMySQL = BigChestModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in bigChestMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = BigChestModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update BigChestMeiZi SUCCESS"
+            
+'''
+    定时更新丝袜妹
+'''
+@app.route('/updateBlackStocking/')
+def updateBlackStockingMeiZi():
+    blackStockingMeiZi = MeiZiSpider().getMeiZiAtPage(1, 7)[::-1]
+    meiZiInMySQL = BlackStockingModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in blackStockingMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = BlackStockingModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update blackStockingMeiZi SUCCESS"
+
+
+'''
+    定时更新美腿妹
+'''
+@app.route('/updateCharmingLegs/')
+def updateCharmingLegs():
+    charmingLegsMeiZi = MeiZiSpider().getMeiZiAtPage(1, 3)[::-1]
+    meiZiInMySQL = CharmingLegsModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in charmingLegsMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = CharmingLegsModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update charmingLegsMeiZi SUCCESS"
+            
+'''
+    定时更新大杂烩
+'''
+@app.route('/updateHodgepodge/')
+def updateHodgepodgeMeiZi():
+    hodgepodgeMeiZi = MeiZiSpider().getMeiZiAtPage(1, 5)[::-1]
+    meiZiInMySQL = HodgepodgeModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in hodgepodgeMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = HodgepodgeModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update hodgepodgeMeiZi SUCCESS"
+            
+'''
+    定时更新妹子
+'''
+@app.route('/updateMeizi/')
+def updateMeiZi():
+    meiZi = MeiZiSpider().getMeiZiAtPage(1, 1)[::-1]
+    meiZiInMySQL = MeiZiModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in meiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = MeiZiModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update meiZi SUCCESS"
+            
+
+'''
+    定时更新小翘臀
+'''
+@app.route('/updateSmallBottom/')
+def updateSmallBottomMeiZi():
+    smallBottomMeiZi = MeiZiSpider().getMeiZiAtPage(1, 6)[::-1]
+    meiZiInMySQL = SmallBottomModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in smallBottomMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = SmallBottomModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update smallBottomMeiZi SUCCESS"
+            
+'''
+    定时更新小清新
+'''
+@app.route('/updateSmallFresh/')
+def updateSmallFresh():
+    smallFreshMeiZi = MeiZiSpider().getMeiZiAtPage(1, 4)[::-1]
+    meiZiInMySQL = SmallFreshModel.query.order_by("id DESC").limit(1)[0]
+    flag = 0
+    for bcm in smallFreshMeiZi:
+        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
+            continue
+        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
+            flag = 1
+            continue
+        else:
+            mz = SmallFreshModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
+            db.session.add(mz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback
+    return "update smallFreshMeiZi SUCCESS"
+
+
+'''
+    NAME:       getMeiziBySpider
+    FUNCTION:   通过爬虫获取妹子
+    PARAM:      page---页数，cid---类别，大胸妹or黑丝袜or小清新等等
+    RETURN:     JSON
+'''
+@app.route('/getMeiZi/')
+def getMeiziBySpider():
+    if request.method == 'GET':
+        page = int(request.args.get("page", 1))
+        cid = int(request.args.get("cid", 1))
+        mz = MeiZiSpider().getMeiZiAtPage(page, cid)
+        return jsonify(meizi=mz)
+
+'''
+    NAME:       getMeiZi       
+    FUNCTION:   获取妹子的信息, 通过数据库,这个方法是推荐的
+    PARAM:      limit---多少张，offset---偏移，cid---类别
 '''
 @app.route('/meizi/', methods=['GET'])
 def getMeiZi():
     if request.method == 'GET':
         lim = int(request.args.get('limit', 30))
         off = int(request.args.get('offset',0))
-        data = MeiZiModel.query.order_by(MeiZiModel.id).limit(lim).offset(off)
-        return jsonify(error = {"error_code":"1", "error_msg": "success"}, res = [i.serialize for i in data]) 
+        cid = int(request.args.get('cid', 1))
+        data = []
+        if cid == 1:
+            data = MeiZiModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 2:
+            data = BigChestModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 3:
+            data = CharmingLegsModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 4:
+            data = SmallFreshModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 5:
+            data = HodgepodgeModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 6:
+            data = SmallBottomModel.query.order_by('id DESC').limit(lim).offset(off)
+        elif cid == 7:
+            data = BlackStockingModel.query.order_by('id DESC').limit(lim).offset(off)
+        else:
+            return jsonify(meizi="")
+        return jsonify(meizi = [i.serialize for i in data]) 
 
 @app.before_request
 def before_request():

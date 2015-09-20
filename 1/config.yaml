@@ -4,3 +4,25 @@ version: 1
 libraries:
 - name: "lxml"
   version: "2.3.4"
+
+cron:
+- url: /updateBigChest
+  schedule: "* 0,1,2,6 * * *"
+
+- url: /updateBlackStocking
+  schedule: "5 0,1,2,6 * * *"
+
+- url: /updateCharmingLegs
+  schedule: "15 0,1,2,6 * * *"
+
+- url: /updateHodgepodge
+  schedule: "20 0,1,2,6 * * *"
+
+- url: /updateMei
+  schedule: "30 0,1,2,6 * * *"
+
+- url: /updateSmallBottom
+  schedule: "40 0,1,2,6 * * *"
+
+- url: /updateSmallFresh
+  schedule: "50 0,1,2,6 * * *"
