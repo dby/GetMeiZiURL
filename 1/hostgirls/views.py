@@ -44,9 +44,9 @@ NOTE:       初始化完成之后不需要在调用，内部接口
 @app.route('/initData/')
 def addMeiZiByCid():
     for i in range(1, 10)[::-1]:
-        meizis = MeiZiSpider().getMeiZiAtPage(i, 4)[::-1]
+        meizis = MeiZiSpider().getMeiZiAtPage(i, 3)[::-1]
         for meizi in meizis:
-            m = SmallFreshModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
+            m = CharmingLegsModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
             db.session.add(m)
             try:
                 db.session.commit()
@@ -58,7 +58,7 @@ def addMeiZiByCid():
 '''
     定时更新大胸妹
 '''
-@app.route('/updateBigChest/')
+@app.route('/updateBigChest')
 def updateBigChestMeiZi():
     bigChestMeiZi = MeiZiSpider().getMeiZiAtPage(1, 2)[::-1]
     meiZiInMySQL = BigChestModel.query.order_by("id DESC").limit(1)[0]
@@ -75,13 +75,13 @@ def updateBigChestMeiZi():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update BigChestMeiZi SUCCESS"
             
 '''
     定时更新丝袜妹
 '''
-@app.route('/updateBlackStocking/')
+@app.route('/updateBlackStocking')
 def updateBlackStockingMeiZi():
     blackStockingMeiZi = MeiZiSpider().getMeiZiAtPage(1, 7)[::-1]
     meiZiInMySQL = BlackStockingModel.query.order_by("id DESC").limit(1)[0]
@@ -98,14 +98,14 @@ def updateBlackStockingMeiZi():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update blackStockingMeiZi SUCCESS"
 
 
 '''
     定时更新美腿妹
 '''
-@app.route('/updateCharmingLegs/')
+@app.route('/updateCharmingLegs')
 def updateCharmingLegs():
     charmingLegsMeiZi = MeiZiSpider().getMeiZiAtPage(1, 3)[::-1]
     meiZiInMySQL = CharmingLegsModel.query.order_by("id DESC").limit(1)[0]
@@ -122,13 +122,13 @@ def updateCharmingLegs():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update charmingLegsMeiZi SUCCESS"
             
 '''
     定时更新大杂烩
 '''
-@app.route('/updateHodgepodge/')
+@app.route('/updateHodgepodge')
 def updateHodgepodgeMeiZi():
     hodgepodgeMeiZi = MeiZiSpider().getMeiZiAtPage(1, 5)[::-1]
     meiZiInMySQL = HodgepodgeModel.query.order_by("id DESC").limit(1)[0]
@@ -145,13 +145,13 @@ def updateHodgepodgeMeiZi():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update hodgepodgeMeiZi SUCCESS"
             
 '''
     定时更新妹子
 '''
-@app.route('/updateMeizi/')
+@app.route('/updateMeiZi')
 def updateMeiZi():
     meiZi = MeiZiSpider().getMeiZiAtPage(1, 1)[::-1]
     meiZiInMySQL = MeiZiModel.query.order_by("id DESC").limit(1)[0]
@@ -168,14 +168,14 @@ def updateMeiZi():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update meiZi SUCCESS"
             
 
 '''
     定时更新小翘臀
 '''
-@app.route('/updateSmallBottom/')
+@app.route('/updateSmallBottom')
 def updateSmallBottomMeiZi():
     smallBottomMeiZi = MeiZiSpider().getMeiZiAtPage(1, 6)[::-1]
     meiZiInMySQL = SmallBottomModel.query.order_by("id DESC").limit(1)[0]
@@ -192,13 +192,13 @@ def updateSmallBottomMeiZi():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
     return "update smallBottomMeiZi SUCCESS"
             
 '''
     定时更新小清新
 '''
-@app.route('/updateSmallFresh/')
+@app.route('/updateSmallFresh')
 def updateSmallFresh():
     smallFreshMeiZi = MeiZiSpider().getMeiZiAtPage(1, 4)[::-1]
     meiZiInMySQL = SmallFreshModel.query.order_by("id DESC").limit(1)[0]
@@ -215,7 +215,8 @@ def updateSmallFresh():
             try:
                 db.session.commit()
             except:
-                db.session.rollback
+                db.session.rollback()
+	#return MeiZiSpider().getMeiZiAtPage(1, 4)
     return "update smallFreshMeiZi SUCCESS"
 
 
@@ -272,6 +273,9 @@ def before_request():
 def teardown_request(exception):
     if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
         if exception is None:
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
     db.session.remove()
     return exception

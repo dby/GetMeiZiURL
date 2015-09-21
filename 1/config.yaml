@@ -7,22 +7,22 @@ libraries:
 
 cron:
 - url: /updateBigChest
-  schedule: "* 0,1,2,6 * * *"
+  schedule: "*/30 * * * *"
 
 - url: /updateBlackStocking
-  schedule: "5 0,1,2,6 * * *"
+  schedule: "*/25 * * * *"
 
 - url: /updateCharmingLegs
-  schedule: "15 0,1,2,6 * * *"
+  schedule: "*/20 * * * *"
 
 - url: /updateHodgepodge
-  schedule: "20 0,1,2,6 * * *"
+  schedule: "*/20 * * * *"
 
-- url: /updateMei
-  schedule: "30 0,1,2,6 * * *"
+- url: /updateMeiZi
+  schedule: "*/15 * * * *"
 
 - url: /updateSmallBottom
-  schedule: "40 0,1,2,6 * * *"
+  schedule: "*/25 * * * *"
 
 - url: /updateSmallFresh
-  schedule: "50 0,1,2,6 * * *"
+  schedule: "*/30 * * * *"
