@@ -17,7 +17,7 @@ from sae.const import (MYSQL_HOST, MYSQL_HOST_S, MYSQL_PORT,
 
 @app.route('/')
 def hello():
-    return app.config['SQLALCHEMY_DATABASE_URI']
+    return "welcome to HostGirls"
 
 '''
     创建数据库
@@ -43,10 +43,10 @@ NOTE:       初始化完成之后不需要在调用，内部接口
 '''
 @app.route('/initData/')
 def addMeiZiByCid():
-    for i in range(1, 10)[::-1]:
-        meizis = MeiZiSpider().getMeiZiAtPage(i, 3)[::-1]
+    for i in range(1, 15)[::-1]:
+        meizis = MeiZiSpider().getMeiZiAtPage(i, 1)[::-1]
         for meizi in meizis:
-            m = CharmingLegsModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
+            m = MeiZiModel(meizi["imgsrc"], meizi["title"], meizi["topiclink"], meizi["startcount"])
             db.session.add(m)
             try:
                 db.session.commit()
@@ -61,17 +61,17 @@ def addMeiZiByCid():
 @app.route('/updateBigChest')
 def updateBigChestMeiZi():
     bigChestMeiZi = MeiZiSpider().getMeiZiAtPage(1, 2)[::-1]
-    meiZiInMySQL = BigChestModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in bigChestMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = BigChestModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = BigChestModel.query.order_by("id DESC").limit(30)
+    
+    for mz in bigChestMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = BigChestModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
@@ -84,21 +84,22 @@ def updateBigChestMeiZi():
 @app.route('/updateBlackStocking')
 def updateBlackStockingMeiZi():
     blackStockingMeiZi = MeiZiSpider().getMeiZiAtPage(1, 7)[::-1]
-    meiZiInMySQL = BlackStockingModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in blackStockingMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = BlackStockingModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = BlackStockingModel.query.order_by("id DESC").limit(30)
+
+    for mz in blackStockingMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = BlackStockingModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
                 db.session.rollback()
+
     return "update blackStockingMeiZi SUCCESS"
 
 
@@ -108,17 +109,17 @@ def updateBlackStockingMeiZi():
 @app.route('/updateCharmingLegs')
 def updateCharmingLegs():
     charmingLegsMeiZi = MeiZiSpider().getMeiZiAtPage(1, 3)[::-1]
-    meiZiInMySQL = CharmingLegsModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in charmingLegsMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = CharmingLegsModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = CharmingLegsModel.query.order_by("id DESC").limit(30)
+
+    for mz in charmingLegsMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = CharmingLegsModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
@@ -131,21 +132,22 @@ def updateCharmingLegs():
 @app.route('/updateHodgepodge')
 def updateHodgepodgeMeiZi():
     hodgepodgeMeiZi = MeiZiSpider().getMeiZiAtPage(1, 5)[::-1]
-    meiZiInMySQL = HodgepodgeModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in hodgepodgeMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = HodgepodgeModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = HodgepodgeModel.query.order_by("id DESC").limit(30)
+
+    for mz in hodgepodgeMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = HodgepodgeModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
                 db.session.rollback()
+	
     return "update hodgepodgeMeiZi SUCCESS"
             
 '''
@@ -153,8 +155,27 @@ def updateHodgepodgeMeiZi():
 '''
 @app.route('/updateMeiZi')
 def updateMeiZi():
-    meiZi = MeiZiSpider().getMeiZiAtPage(1, 1)[::-1]
-    meiZiInMySQL = MeiZiModel.query.order_by("id DESC").limit(1)[0]
+    meiZi = MeiZiSpider().getMeiZiAtPage(2, 1)[::-1]
+    meiZi = meiZi + MeiZiSpider().getMeiZiAtPage(1, 1)[::-1]
+    meiZiInMySQL = MeiZiModel.query.order_by("id DESC").limit(60)
+    
+    for mz in meiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = MeiZiModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+	
+    return "update meizi success"
+    
+    '''
     flag = 0
     for bcm in meiZi:
         if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
@@ -170,7 +191,7 @@ def updateMeiZi():
             except:
                 db.session.rollback()
     return "update meiZi SUCCESS"
-            
+    '''        
 
 '''
     定时更新小翘臀
@@ -178,17 +199,17 @@ def updateMeiZi():
 @app.route('/updateSmallBottom')
 def updateSmallBottomMeiZi():
     smallBottomMeiZi = MeiZiSpider().getMeiZiAtPage(1, 6)[::-1]
-    meiZiInMySQL = SmallBottomModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in smallBottomMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = SmallBottomModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = SmallBottomModel.query.order_by("id DESC").limit(30)
+
+    for mz in smallBottomMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = SmallBottomModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
@@ -201,17 +222,17 @@ def updateSmallBottomMeiZi():
 @app.route('/updateSmallFresh')
 def updateSmallFresh():
     smallFreshMeiZi = MeiZiSpider().getMeiZiAtPage(1, 4)[::-1]
-    meiZiInMySQL = SmallFreshModel.query.order_by("id DESC").limit(1)[0]
-    flag = 0
-    for bcm in smallFreshMeiZi:
-        if bcm["imgsrc"] != meiZiInMySQL.imgsrc and flag == 0:
-            continue
-        elif bcm["imgsrc"] == meiZiInMySQL.imgsrc and flag == 0:
-            flag = 1
-            continue
-        else:
-            mz = SmallFreshModel(bcm["imgsrc"], bcm["title"], bcm["topiclink"], bcm["startcount"])
-            db.session.add(mz)
+    meiZiInMySQL = SmallFreshModel.query.order_by("id DESC").limit(30)
+
+    for mz in smallFreshMeiZi:
+        flag = 0
+        for bcm in meiZiInMySQL:
+            if bcm.imgsrc == mz["imgsrc"]:
+                flag = 1
+                break;
+        if flag == 0:
+            mmzz = SmallFreshModel(mz["imgsrc"], mz["title"], mz["topiclink"], mz["startcount"])
+            db.session.add(mmzz)
             try:
                 db.session.commit()
             except:
